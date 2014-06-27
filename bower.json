@@ -1,0 +1,6 @@
+{
+	"name": "TODO-Rama",
+	"dependencies": {
+		"todomvc-common": "~0.1.4"
+	}
+}

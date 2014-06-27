@@ -1,0 +1,14 @@
+{
+  "name": "TODO-Rama",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coolchem/TODO-Rama.git"
+  },
+  "devDependencies": {
+    "gulp": "^3.7.0",
+    "gulp-concat": "^2.2.0",
+    "gulp-connect": "^2.0.5",
+    "gulp-clean": "^0.3.0",
+    "gulp-ignore": "^1.1.0"
+  }
+}
