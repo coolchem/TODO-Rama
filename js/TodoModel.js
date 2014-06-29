@@ -12,6 +12,8 @@ $r.package("main").Class("TodoModel").extends("Model")(function () {
     this.noOfActiveItems = 0;
     this.noOfCompletedItems = 0;
 
+    var handleTodoListChange = this.bind(handleTodoListChangeFn);
+
     this.init = function () {
         this.super.init();
         localStorage = window.localStorage;
@@ -93,7 +95,49 @@ $r.package("main").Class("TodoModel").extends("Model")(function () {
 
     }
 
-    function handleTodoListChange(event) {
+    function handleTodoListChangeFn(event) {
+
+        switch (event.kind) {
+            case $r.CollectionEventKind.ADD:
+            {
+                // items are added
+                this.noOfActiveItems += 1;
+                break;
+            }
+
+            case $r.CollectionEventKind.REPLACE:
+            {
+
+                break;
+            }
+
+            case $r.CollectionEventKind.REMOVE:
+            {
+                break;
+            }
+
+            case $r.CollectionEventKind.MOVE:
+            {
+                break;
+            }
+
+            case $r.CollectionEventKind.REFRESH:
+            {
+                break;
+            }
+
+            case $r.CollectionEventKind.RESET:
+            {
+                break;
+            }
+
+            case $r.CollectionEventKind.UPDATE:
+            {
+                break;
+            }
+        }
+
+        event.stopImmediatePropagation();
 
         if (localStorage)
             localStorage.setItem('todos-rama', JSON.stringify(staticTodoList.source.map(getSimpleTodoItem)));

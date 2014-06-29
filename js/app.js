@@ -9,7 +9,14 @@ $r.package("main").skins(
 $r.Application('todoApp', function()
 {
     var main = $r.package("main");
-    var noOfActiveItems = 0,noOfCompletedItems = 0,todoModel,todoController;
+    var noOfActiveItems = 0,
+            noOfCompletedItems = 0,todoModel,todoController;
+
+    this.set("noOfActiveItems", function(value){
+
+        noOfActiveItems = value;
+        setTodoCountContent();
+    })
 
     var setAppState = this.bind(setAppStateFn);
     var setTodoCountContent = this.bind(setTodoCountContentFn);
@@ -24,7 +31,8 @@ $r.Application('todoApp', function()
 
         //now initializing the model and controller
         todoModel =  new main.TodoModel();
-        todoModel.observe("noOfActiveItems", handleActiveItemsChanged)
+        todoModel.bindProperty("noOfActiveItems").with("noOfActiveItems",this);
+        //todoModel.observe("noOfActiveItems", handleActiveItemsChanged)
         todoModel.observe("noOfCompletedItems", handleCompletedItemsChanged);
 
         todoController =  new main.TodoController(this, todoModel);
