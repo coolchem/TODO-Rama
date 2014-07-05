@@ -22,6 +22,8 @@ $r.package("main").Class("TodoModel").extends("Model")(function () {
         if (localStorage) {
             items = JSON.parse(localStorage.getItem('todos-rama')) || [];
         }
+
+        activeTodoList.filterFunction = todoItemsFilterFunction;
     }
 
     this.initialize = function(){
@@ -105,37 +107,13 @@ $r.package("main").Class("TodoModel").extends("Model")(function () {
         updateLocalStorage()
     }
 
-    var allTodoItems = null;
     this.applyFilter = function (filterType)
     {
         if (filterType !== _currentFilter) {
             var newArray = [];
             _currentFilter = filterType;
 
-            if(filterType !== "")
-            {
-                if(allTodoItems === null)
-                    allTodoItems = activeTodoList.source;
-
-                var newArray = [];
-
-                $r.forEach(allTodoItems, function(todoItem){
-
-                    if (_currentFilter === "filterActive" && todoItem.completed === false) {
-                        newArray.push(todoItem);
-                    }
-                    else if (_currentFilter === "filterCompleted" && todoItem.completed === true) {
-                        newArray.push(todoItem);
-                    }
-                })
-
-                activeTodoList.source = newArray;
-            }
-            else {
-
-                activeTodoList.source = items;
-                allTodoItems = null;
-            }
+            activeTodoList.refresh();
         }
     };
 
@@ -144,6 +122,20 @@ $r.package("main").Class("TodoModel").extends("Model")(function () {
         return activeTodoList;
     });
 
+    function todoItemsFilterFunction(item){
+
+        if(_currentFilter !== "")
+        {
+            if (_currentFilter === "filterActive" && item.completed === true) {
+                return false;
+            }
+            else if (_currentFilter === "filterCompleted" && item.completed === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
     function makeItemObservable(item){
         $r.Observable(item);
         item.observe("completed", handleTodoItemCompletedStatusChanged);
