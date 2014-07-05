@@ -31,12 +31,11 @@ $r.Application('todoApp', function()
 
         //now initializing the model and controller
         todoModel =  new main.TodoModel();
+
         todoModel.bindProperty("noOfActiveItems").with("noOfActiveItems",this);
-        //todoModel.observe("noOfActiveItems", handleActiveItemsChanged)
         todoModel.observe("noOfCompletedItems", handleCompletedItemsChanged);
 
         todoController =  new main.TodoController(this, todoModel);
-        //adding event listener to the model so the view can react to the changes in the model
 
 
         setAppState();
@@ -50,6 +49,7 @@ $r.Application('todoApp', function()
     this.clearCompletedBtn = null;
     this.todoCount = null;
     this.todoCountValue = null;
+    this.toggleAll = null;
 
     this.skinParts = [{id:'todo-form', required:true},
         {id:'new-todo', required:true},
@@ -78,6 +78,7 @@ $r.Application('todoApp', function()
         if(partName === "todo-list")
         {
             instance.dataProvider = todoModel.todoList;
+            instance.addEventListener(main.TodoListItemRendererEvent.TODO_ITEM_DELETED, todoController.removeTodoItem)
         }
 
         if(instance === this.filterAll || instance === this.filterActive || instance === this.filterCompleted)
@@ -100,6 +101,13 @@ $r.Application('todoApp', function()
             this.clearCompletedBtn = instance;
             this.clearCompletedBtn.addEventListener("click", todoController.clearCompletedItems);
             handleCompletedItemsChanged();
+        }
+
+        if(partName === "toggle-all")
+        {
+            this.toggleAll = instance;
+            this.toggleAll.addEventListener("click", todoController.toggleAllItems)
+
         }
     }
 
@@ -125,7 +133,7 @@ $r.Application('todoApp', function()
 
         if(this.clearCompletedBtn)
         {
-            if(noOfCompletedItems.length > 0)
+            if(noOfCompletedItems > 0)
             {
                 this.clearCompletedBtn.display = "";
                 this.clearCompletedBtn.textContent = "Clear completed(" + noOfCompletedItems + ")";

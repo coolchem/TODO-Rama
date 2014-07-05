@@ -32,6 +32,11 @@ $r.package("main").Class("TodoController")(function(){
 
   }
 
+  this.removeTodoItem = function(event){
+
+      _model.removeTodoItem(event.todoItem);
+  }
+
   this.filterTodoItems = function(event){
 
 
@@ -60,12 +65,12 @@ $r.package("main").Class("TodoController")(function(){
 
   this.clearCompletedItems = function(event){
 
-
+      _model.clearCompletedItems();
   }
 
-  this.toggleTodoItemStatus = function(event){
+  this.toggleAllItems = function(event){
 
-
+     _model.toggleAllItems(event.target.checked);
   }
 
 
