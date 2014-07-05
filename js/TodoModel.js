@@ -213,7 +213,7 @@ $r.package("main").Class("TodoModel").extends("Model")(function () {
     function updateLocalStorage(){
 
         if (localStorage)
-            localStorage.setItem('todos-rama', JSON.stringify(items));
+            localStorage.setItem('todos-rama', JSON.stringify(activeTodoList.source));
 
     }
 
