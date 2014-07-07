@@ -1,4 +1,4 @@
-$r.package("main").Class("TodoListItemRenderer").extends("Component")(function(){
+$r.package("main").Class("TodoListItemRenderer").extends("ListItemRenderer")(function(){
 
     var main = $r.package("main")
 
@@ -13,7 +13,6 @@ $r.package("main").Class("TodoListItemRenderer").extends("Component")(function()
     var handleDescriptionChange = this.bind(handleDescriptionChangeFn);
     var removeEditingState = this.bind(removeEditingStateFn);
 
-    var _data;
     this.descriptionLabel = null;
     this.completedCheckbox = null;
     this.editingInput = null;
@@ -31,46 +30,43 @@ $r.package("main").Class("TodoListItemRenderer").extends("Component")(function()
         window.addEventListener("mousedown", handleMouseDownAnywhere);
     };
 
-    this.get("data", function(){
-        return _data;
-    })
 
     this.set("data", function(value){
 
-        _data = value;
-        if(_data)
+        if(value !== null)
         {
+            this.super.data = value;
          if(this.descriptionLabel)
-            this.descriptionLabel.textContent = _data.description;
+            this.descriptionLabel.textContent = value.description;
 
             if(this.completedCheckbox)
-                this.completedCheckbox[0].checked = _data.completed;
+                this.completedCheckbox[0].checked = value.completed;
             setCurrentState();
 
-            _data.observe("completed", handleCompletedStatusChanged)
+            value.observe("completed", handleCompletedStatusChanged)
 
         }
     })
 
     function handleCompletedStatusChangedFn(){
         setCurrentState();
-        this.completedCheckbox[0].checked = _data.completed
+        this.completedCheckbox[0].checked = this.data.completed
     }
 
     this.partAdded = function(partName, instance){
         this.super.partAdded(partName, instance);
         if(instance === this.descriptionLabel)
         {
-            if(_data)
-                this.descriptionLabel.textContent = _data.description;
+            if(this.data)
+                this.descriptionLabel.textContent = this.data.description;
         }
 
         if(instance === this.completedCheckbox)
         {
             this.completedCheckbox.addEventListener("click", handleCompletedCheckboxClicked);
 
-            if(_data)
-                this.completedCheckbox[0].checked = _data.completed;
+            if(this.data)
+                this.completedCheckbox[0].checked = this.data.completed;
         }
 
         if(instance === this.removeButton)
@@ -111,36 +107,36 @@ $r.package("main").Class("TodoListItemRenderer").extends("Component")(function()
     function handleDoubleClickFn(event){
 
         setCurrentState(true);
-        this.editingInput[0].value = _data.description;
+        this.editingInput[0].value = this.data.description;
         this.editingInput[0].focus();
     }
 
     function handleDescriptionChangeFn(event){
-        _data.description = this.editingInput[0].value;
-        this.descriptionLabel.textContent = _data.description;
+        this.data.description = this.editingInput[0].value;
+        this.descriptionLabel.textContent = this.data.description;
 
     }
 
     function handleRemoveTodoItemFn(event){
 
-        var removeEvent = new  main.TodoListItemRendererEvent(main.TodoListItemRendererEvent.TODO_ITEM_DELETED, _data);
+        var removeEvent = new  main.TodoListItemRendererEvent(main.TodoListItemRendererEvent.TODO_ITEM_DELETED, this.data);
         this.dispatchEvent(removeEvent);
     }
 
 
     function handleCompletedCheckboxClickedFn(event){
 
-       _data.completed = event.target.checked;
+        this.data.completed = event.target.checked;
 
 
     }
 
     function setCurrentStateFn(editing){
-      if(_data)
+      if(this.data)
       {
           if(!editing)
           {
-              if(_data.completed)
+              if(this.data.completed)
               {
                   this.currentState = "completed"
               }
