@@ -1,7 +1,9 @@
 <div>
 
     <states>
-        <state name="hastodoitems"></state>
+        <state name="all" state_groups="hastodoitems"></state>
+        <state name="active" state_groups="hastodoitems"></state>
+        <state name="completed" state_groups="hastodoitems"></state>
     </states>
 
     <section id="todoapp">
@@ -25,13 +27,13 @@
 			</span>
             <ul id="filters">
                 <li>
-                    <a id="filterAll" href="#/">All</a>
+                    <a id="filterAll" class.all="selected">All</a>
                 </li>
                 <li>
-                    <a id="filterActive" href="#/active">Active</a>
+                    <a id="filterActive" class.active="selected">Active</a>
                 </li>
                 <li>
-                    <a id="filterCompleted" href="#/completed">Completed</a>
+                    <a id="filterCompleted" class.completed="selected">Completed</a>
                 </li>
             </ul>
             <button id="clear-completed"></button>

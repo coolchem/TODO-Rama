@@ -7,10 +7,6 @@ $r.package("main").Class("TodoController")(function(){
 
       _view = view;
       _model = model;
-
-      //adding event listener for change in checkbox of individual item.
-      _view.addEventListener("completedCheckBoxClicked", this.toggleTodoItemStatus)
-
       _model.initialize();
   }
 
@@ -22,12 +18,8 @@ $r.package("main").Class("TodoController")(function(){
       if(_view.newTodoInput[0].value !== "")
       {
           _model.addTodoItem(_view.newTodoInput[0].value);
-          if(_view.currentState === "")
-          {
-              _view.currentState = "hastodoitems";
-          }
-
           _view.newTodoInput[0].value = "";
+          _view.validateState();
       }
 
   }
@@ -43,24 +35,22 @@ $r.package("main").Class("TodoController")(function(){
       if(event.target === _view.filterCompleted[0])
       {
           _model.applyFilter("filterCompleted");
-          _view.filterCompleted.setAttribute("class", "selected");
-          _view.filterAll.setAttribute("class", "");
-          _view.filterActive.setAttribute("class", "");
+          window.location.hash = "#/completed";
+
+
       }
       else if(event.target === _view.filterActive[0])
       {
           _model.applyFilter("filterActive");
-          _view.filterCompleted.setAttribute("class", "");
-          _view.filterAll.setAttribute("class", "");
-          _view.filterActive.setAttribute("class", "selected");
+          window.location.hash = "#/active";
       }
       else
       {
           _model.applyFilter("");
-          _view.filterCompleted.setAttribute("class", "");
-          _view.filterAll.setAttribute("class", "selected");
-          _view.filterActive.setAttribute("class", "");
+          window.location.hash = "#/";
       }
+
+      _view.validateState();
   }
 
   this.clearCompletedItems = function(event){
@@ -71,6 +61,11 @@ $r.package("main").Class("TodoController")(function(){
   this.toggleAllItems = function(event){
 
      _model.toggleAllItems(event.target.checked);
+  }
+
+  this.toggleTodoItemStatus = function(event){
+
+     console.log(event);
   }
 
 

@@ -127,8 +127,6 @@ $r.package("main").Class("TodoListItemRenderer").extends("ListItemRenderer")(fun
     function handleCompletedCheckboxClickedFn(event){
 
         this.data.completed = event.target.checked;
-
-
     }
 
     function setCurrentStateFn(editing){

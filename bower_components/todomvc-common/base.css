@@ -343,6 +343,7 @@ label[for='toggle-all'] {
 	color: #83756f;
 	margin: 2px;
 	text-decoration: none;
+    cursor: pointer;
 }
 
 #filters li a.selected {

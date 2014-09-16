@@ -10,7 +10,13 @@ $r.Application('todoApp', function()
 {
     var main = $r.package("main");
     var noOfActiveItems = 0,
-            noOfCompletedItems = 0,todoModel,todoController;
+            noOfCompletedItems = 0,todoModel,todoController,
+    locationHashChanged = this.bind(locationHashChangedFn);
+
+    var setTodoCountContent = this.bind(setTodoCountContentFn);
+    var handleCompletedItemsChanged = this.bind(handleCompletedItemsChangedFn);
+
+
 
     this.set("noOfActiveItems", function(value){
 
@@ -18,9 +24,7 @@ $r.Application('todoApp', function()
         setTodoCountContent();
     })
 
-    var setAppState = this.bind(setAppStateFn);
-    var setTodoCountContent = this.bind(setTodoCountContentFn);
-    var handleCompletedItemsChanged = this.bind(handleCompletedItemsChangedFn);
+
     this.init = function()
     {
         //Calling the init on the super class is a must, one of the limitations of the framework.
@@ -37,8 +41,14 @@ $r.Application('todoApp', function()
 
         todoController =  new main.TodoController(this, todoModel);
 
+        if(window.location.hash === "" || window.location.hash === null || window.location.hash === undefined)
+        {
+            window.location.hash = "#/"
+        }
 
-        setAppState();
+        this.validateState();
+
+        window.onhashchange = locationHashChanged;
 
     }
 
@@ -73,6 +83,7 @@ $r.Application('todoApp', function()
         if(partName === "new-todo")
         {
             this.newTodoInput = instance;
+            this.newTodoInput.focus();
         }
 
         if(partName === "todo-list")
@@ -111,13 +122,32 @@ $r.Application('todoApp', function()
         }
     }
 
-    function setAppStateFn(){
+    this.getCurrentState = function(){
 
 
-        if(todoModel.todoList.length > 0)
+        switch(window.location.hash)
         {
-            this.currentState = "hastodoitems";
+            case "#/" :
+            {
+                return "all"
+            }
+
+            case "#/active" :
+            {
+                return "active"
+            }
+
+            case "#/completed" :
+            {
+                return "completed"
+            }
+
         }
+
+        if(this.newTodoInput)
+            this.newTodoInput.focus();
+
+        return "";
     }
 
 
@@ -143,6 +173,16 @@ $r.Application('todoApp', function()
                 this.clearCompletedBtn.display = "none";
             }
         }
+
+        if(this.toggleAll)
+        {
+            if(todoModel.todoList.length > 0 && todoModel.noOfCompletedItems === todoModel.todoList.length)
+                this.toggleAll[0].checked = true;
+            else
+                this.toggleAll[0].checked = false;
+        }
+
+        this.validateState();
     }
 
     function setTodoCountContentFn(){
@@ -162,6 +202,10 @@ $r.Application('todoApp', function()
             this.todoCountValue.textContent = todoModel.noOfActiveItems;
             this.todoCount.textContent = remainingCount;
         }
+    }
+
+    function locationHashChangedFn(){
+       this.validateState();
     }
 
 
